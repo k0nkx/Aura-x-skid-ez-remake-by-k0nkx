@@ -26,13 +26,10 @@ player.CharacterRemoving:Connect(function()
     tool.Parent = game.Players.LocalPlayer.Backpack
 end)
 
---[[
-Made By Xarcax, If U Gon Skid This Pls Credit Me
-Some Features is buggy and some is not
-Auto Pred Is Decent Features is way better than the original
-I Will Add Camlock Next Update But Its Not Gonna Be Open Src
-@2024, Copyright Holder = Xarcax.
---]]
+--Made By Xarcax, If U Gon Skid This Pls Credit Me Some Features is buggy and some is not Auto Pred Is Decent Features is way better than the original I Will Add Camlock Next Update But Its Not Gonna Be Open Src @2024, Copyright Holder = Xarcax.
+
+--Script reworked by k0nkx | asainyuh and thx to haalfi for helping on Orbit
+
 local Library = loadstring(game:HttpGet("https://pastebin.com/raw/kpLzpNXc"))()
 
 local Window = Library:CreateWindow("Aura X Remake", Vector2.new(300, 300), Enum.KeyCode.V)
@@ -43,6 +40,15 @@ local Notify = AkaliNotif.Notify
 
 local AimingTab = Window:CreateTab("Main")
 local MiscTab = Window:CreateTab("Misc")
+
+local testSection = MiscTab:CreateSector("camlock", "left")
+
+testSection:AddButton(
+    "RightClick",
+    function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/BalligusapoTT/BalligusapoTT/main/Leftclickballi'))()
+    end
+)
     
 local testSection = AimingTab:CreateSector("camlock", "left")
 
@@ -333,6 +339,40 @@ testSection:AddToggle(
         Settings.rewrittenmain.RESOLVER = State
     end
 )
+
+local testSection = AimingTab:CreateSector("Orbit", "left") --you can  change the section code, for example "testsection" can be changed to "FunnyCoolSection" etc.
+
+testSection:AddToggle(
+    "Enabled",
+    false,
+    function(first)
+        Settings.rewrittenmain.TargetStrafe = first
+    end
+)
+
+testSection:AddTextbox(
+    "Distance",
+    nil,
+    function(State)
+        Settings.rewrittenmain.StrafeRadius = State
+    end
+)
+
+testSection:AddTextbox(
+    "Height",
+    nil,
+    function(State)
+        Settings.rewrittenmain.StrafeHeight = State
+    end
+)
+
+testSection:AddTextbox(
+    "Speed",
+    nil,
+    function(State)
+        Settings.rewrittenmain.StrafeSpeed = State
+    end
+)
  
 local SelectedPart = "UpperTorso"                              
 local Prediction = true
@@ -608,8 +648,39 @@ local PredictionValue = 0.24
                 SelectedPart = "HumanoidRootPart"
         end
     end)
+    
+    game:GetService("RunService").Stepped:connect(
+    function()
+if Settings.rewrittenmain.TargetStrafe == true and enabled then
+            local lp = game.Players.LocalPlayer.Character
+
+            local targpos = Plr.Character.HumanoidRootPart.Position
+
+            lp:SetPrimaryPartCFrame(
+                CFrame.new(
+                    targpos +
+                        Vector3.new(
+                            math.cos(tick() * Settings.rewrittenmain.StrafeSpeed) * Settings.rewrittenmain.StrafeRadius,
+                            Settings.rewrittenmain.StrafeHeight,
+                            math.sin(tick() * Settings.rewrittenmain.StrafeSpeed) * Settings.rewrittenmain.StrafeRadius
+                        )
+                )
+            )
+
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                CFrame.new(
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.Position,
+                Vector3.new(targpos.X, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.Position.Y, targpos.Z)
+            )
+
+            game:GetService("Players").LocalPlayer.Character.Humanoid.AutoRotate = false
+        else
+            game:GetService("Players").LocalPlayer.Character.Humanoid.AutoRotate = true
+        end
+    end
+)
  
---the cam lock
+--the TargetLock
  
 getgenv().Prediction = 0.143105125985120958176	
 getgenv().AimPart = "UpperTorso"	
